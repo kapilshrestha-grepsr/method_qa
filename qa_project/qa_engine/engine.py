@@ -4,7 +4,8 @@ from .checks import (
     check_special_characters,
     check_url_format,
     check_url_leakage,
-    check_categories
+    check_categories,
+    check_html_tags
 )
 
 from .config import (
@@ -28,6 +29,7 @@ def run_qa(df):
     check_url_format(df, URL_COLUMNS)
     check_url_leakage(df, URL_COLUMNS)
     check_categories(df)
+    check_html_tags(df)
 
     print("QA COMPLETED")
 

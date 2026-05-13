@@ -9,8 +9,8 @@ import dtale
 # =========================================================
 # CONFIG
 # =========================================================
-project_name = "baylabusa"
-source = "/home/kapil/Downloads/202605021629-methodusa_baylabusa_com_2026-05-02.csv"
+project_name = "biohorizons"
+source = "/home/kapil/Downloads/202605010805-biohorizons_com_2026-05-01.csv"
 
 
 # =========================================================

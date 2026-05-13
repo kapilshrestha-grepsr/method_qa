@@ -22,3 +22,6 @@ UNIQUE_COLUMNS = [
     "MFRPart #",
     "Description #1"
 ]
+
+
+HTML_PATTERN = r"</?[a-zA-Z][^>]*>"

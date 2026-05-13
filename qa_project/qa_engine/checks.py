@@ -1,7 +1,9 @@
 from .helpers import add_issue, norm, safe_col, get_category_columns
-from .config import SPECIAL_CHAR_PATTERN, URL_PATTERN
-
-
+from .config import (
+    SPECIAL_CHAR_PATTERN,
+    URL_PATTERN,
+    HTML_PATTERN
+)
 def check_empty_values(df, columns):
     for col in columns:
         if not safe_col(df, col):
@@ -46,12 +48,27 @@ def check_url_format(df, url_columns):
 
 
 def check_url_leakage(df, url_columns):
+
+    # normalize URL column names for comparison
+    normalized_url_cols = {
+        c.lower().replace(" ", "")
+        for c in url_columns
+    }
+
     for col in df.columns:
-        if col in url_columns:
+
+        normalized_col = col.lower().replace(" ", "")
+
+        # skip ALL url-like columns
+        if normalized_col in normalized_url_cols:
             continue
 
-        mask = df[col].astype(str).str.contains(URL_PATTERN, na=False)
-        add_issue(f"url_leak_{col}", df[mask])
+        values = df[col].fillna("").astype(str)
+
+        mask = values.str.contains(URL_PATTERN, na=False)
+
+        if mask.any():
+            add_issue(f"url_leak_{col}", df[mask])
 
 
 def check_categories(df):
@@ -62,3 +79,38 @@ def check_categories(df):
 
         if mask.any():
             add_issue(f"category_url_leak_{col}", df[mask])
+
+
+
+# =========================================================
+# HTML TAG CHECK
+# =========================================================
+
+def check_html_tags(df, exclude_columns=None):
+
+    if exclude_columns is None:
+        exclude_columns = []
+
+    normalized_excluded = {
+        c.lower().replace(" ", "")
+        for c in exclude_columns
+    }
+
+    for col in df.columns:
+
+        normalized_col = col.lower().replace(" ", "")
+
+        # skip excluded columns if needed
+        if normalized_col in normalized_excluded:
+            continue
+
+        values = df[col].fillna("").astype(str)
+
+        mask = values.str.contains(
+            HTML_PATTERN,
+            regex=True,
+            na=False
+        )
+
+        if mask.any():
+            add_issue(f"html_tags_{col}", df[mask])
