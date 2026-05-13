@@ -3,23 +3,24 @@ from qa_engine.reporter import save_issue_reports, save_summary_csv
 from qa_engine.dtale_viewer import open_reports_in_dtale
 import webbrowser
 import time
+import dtale
 
 
 # =========================================================
 # CONFIG
 # =========================================================
-project_name = "zestdent"
-source = "/home/kapil/Downloads/202605011459-zestdent_2026-05-01.csv"
+project_name = "baylabusa"
+source = "/home/kapil/Downloads/202605021629-methodusa_baylabusa_com_2026-05-02.csv"
 
 
 # =========================================================
-# LOAD DATA
+# LOAD FULL DATASET
 # =========================================================
 df = load_csv(source)
 
 
 # =========================================================
-# RUN QA ENGINE
+# RUN QA
 # =========================================================
 qa_results, qa_summary = run_qa(df)
 
@@ -34,17 +35,29 @@ print("\nReports generated in /reports folder")
 
 
 # =========================================================
-# OPEN DTALE (MULTI DATASET SAFE)
+# OPEN FULL DATA FIRST (ALWAYS GUARANTEED)
+# =========================================================
+print("\nOpening FULL DATA in D-Tale...\n")
+
+full_session = dtale.show(df, name="full data")
+
+full_url = full_session._main_url
+
+print(f"full data: {full_url}")
+
+
+# =========================================================
+# OPEN QA REPORTS
 # =========================================================
 sessions = open_reports_in_dtale("reports")
 
 
 # =========================================================
-# COLLECT URLs
+# COLLECT QA URLS
 # =========================================================
-urls = []
+urls = [full_url]
 
-print("\nD-Tale URLs:\n")
+print("\nQA D-Tale URLs:\n")
 
 for name, session in sessions.items():
     try:
@@ -56,7 +69,7 @@ for name, session in sessions.items():
 
 
 # =========================================================
-# OPEN ALL TABS
+# OPEN ALL TABS (FULL DATA ALWAYS INCLUDED)
 # =========================================================
 print("\nOpening all D-Tale tabs...\n")
 
@@ -66,7 +79,7 @@ for url in urls:
 
 
 # =========================================================
-# KEEP ALIVE (IMPORTANT)
+# KEEP ALIVE
 # =========================================================
 print("\nKeeping server alive...")
 
