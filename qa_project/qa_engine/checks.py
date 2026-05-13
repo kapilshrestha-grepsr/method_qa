@@ -114,3 +114,41 @@ def check_html_tags(df, exclude_columns=None):
 
         if mask.any():
             add_issue(f"html_tags_{col}", df[mask])
+
+
+
+# =========================================================
+# FULLY EMPTY COLUMNS CHECK
+# =========================================================
+def check_fully_empty_columns(df):
+    """
+    Detect columns where ALL rows are empty/null
+    """
+
+    from .helpers import qa_summary
+
+    null_columns = []
+
+    for col in df.columns:
+
+        values = norm(df[col])
+
+        # entire column empty
+        if values.eq("").all():
+            null_columns.append(col)
+
+    # print nicely
+    if null_columns:
+
+        print("\nNULL COLUMNS:")
+        print(", ".join(null_columns))
+
+        # add to summary
+        qa_summary.append({
+            "issue": "fully_empty_columns",
+            "rows": len(null_columns),
+            "columns": ", ".join(null_columns)
+        })
+
+    else:
+        print("\nNo fully empty columns found.")

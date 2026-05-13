@@ -5,7 +5,8 @@ from .checks import (
     check_url_format,
     check_url_leakage,
     check_categories,
-    check_html_tags
+    check_html_tags,
+    check_fully_empty_columns
 )
 
 from .config import (
@@ -30,6 +31,7 @@ def run_qa(df):
     check_url_leakage(df, URL_COLUMNS)
     check_categories(df)
     check_html_tags(df)
+    check_fully_empty_columns(df)
 
     print("QA COMPLETED")
 

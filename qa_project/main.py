@@ -4,6 +4,8 @@ from qa_engine.dtale_viewer import open_reports_in_dtale
 import webbrowser
 import time
 import dtale
+import os
+import glob
 
 
 # =========================================================
@@ -11,7 +13,6 @@ import dtale
 # =========================================================
 project_name = "biohorizons"
 source = "/home/kapil/Downloads/202605010805-biohorizons_com_2026-05-01.csv"
-
 
 # =========================================================
 # LOAD FULL DATASET
@@ -23,6 +24,30 @@ df = load_csv(source)
 # RUN QA
 # =========================================================
 qa_results, qa_summary = run_qa(df)
+
+
+# =========================================================
+# CLEAN OLD REPORTS
+# =========================================================
+reports_dir = "reports"
+
+os.makedirs(reports_dir, exist_ok=True)
+
+csv_files = glob.glob(os.path.join(reports_dir, "*.csv"))
+
+if csv_files:
+
+    print("\nRemoving old report CSVs...\n")
+
+    for file in csv_files:
+
+        print(f"Deleting: {os.path.basename(file)}")
+        os.remove(file)
+
+    print("\nOld reports cleanup completed.")
+
+else:
+    print("\nNo old report CSVs found.")
 
 
 # =========================================================
